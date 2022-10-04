@@ -1,0 +1,21 @@
+PROJECT 2 - Paolo Celada 12440812
+---------------------------------
+
+References(Websites):
+ - stackoverflow
+ - GeeksforGeeks
+ - W3schools
+
+URL Project 2:
+https://www.cs.uky.edu/~pce223/Project_2/memory.html
+
+Description:
+The main goal of project 2 was to implement a small web game in HTML and JavaScript. To do so the program written is divided in 2 parts: the first part is composed by a series of html tag which give the web page a static structure, on which all the game is based; the second part is program written inside the html script in JavaScript, which allows the user to actually play the game, giving the web page dynamic properties. All the actions taken by the user by clicking on the cells are managed by a series of JS functions, which are written in order to display correct messages and update elements in the webpage.
+The game is called Memory, it's a 2 player's game in which each player have to find a pair of identical cards (same color and number) on the board by clicking on the cells. When the board is completed, the player who have the most points wins.
+
+
+Questions:
+ - this is because for this project no dynamic contents is provided by the server. For project 1, the server was required to execute a CGI file called by the html file, while in this project the client browser is able to interpretate and manipulate the javasript code, so an execution from the server side is not needed;
+ - because since everything is written in the HTML document, if the name of the document was something equal for each student, everyone could be able to open another's student file with a web browser and copy its code (by right clicking into the web page and clicking on "view page source" or something similar);
+ - to save the game pieces I used an HTML table. This table is populated randomly one by one once the size and names of the player are known. I chose this data structure because it allows me to show on the table on the screen easely game pieces when the get picked. This was done by keeping a second at first empty table showed to the users with the same characteristics of the first one, which gets full by copying its cell from the ones of the full table every time the user click on a cell;
+ - no. Every time you flip a card, the program automatically remove from that cell the property of getting clicked. If 2 flipped cards are not a pair, when you cover them again this property is given back to them. If you concede the game, the program remove the clicking property to every cell or button that had it (so every cell in the board plus the concede element). When you finish the game, only the concede element still have the clicking property, so the program removes it. This clicking propery is given to an element of the HTML file thorugh the command "addEventListener("click"...)" and "removeEventListener("click"...)";

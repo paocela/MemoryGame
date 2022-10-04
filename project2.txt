@@ -1,0 +1,139 @@
+Project #2 - Due Monday-October 14, 23:59:59pm
+
+Use Canvas and submit a ZIP file for Program 2, give it the
+name described below in "What to turn in".
+---------------------------------------------------------
+
+Note: There are requirements for all programming assignments
+listed in the syllabus.  You must follow each of them.  They
+will count against your grade even though they are not listed
+in the assignment rubric.
+
+---------------------------------------------------------
+[Made-up story redacted]
+
+You shall write a Javascript game.
+
+Requirements:
+    - You are to implement a simple web application in HTML/JavaScript.
+    - Your application shall be implemented on the www.cs.uky.edu web-server.
+      [Is this a requirement that means anything here?]
+    - Your application shall have some unique name (ie, make up a
+      name) - this is for "security" purposes, why?
+    - Your application must not allow elements to be clicked unless
+      they are "activated" by your program.  For example, a piece
+      that has been matched and removed from the board should not
+      be clickable any longer.
+
+
+Specifications:
+    - You shall produce (2) total files:
+        1) an HTML file containing the appropriate JavaScript
+        2) a *text* file named P2.txt  (NOT a PDF/Word file!)
+
+    1) HTML file shall:
+
+        - have your name(s) somewhere near the top, as a comment.
+        - be a complete HTML document with appropriate HTML tags.
+        - not call/access/reference another website
+        - have JavaScript that simulates a memory game described
+          below.
+
+    2) Your Javascript program shall follow these steps:
+        SETUP:
+        - Ask (2) players for their names via a prompt() call.
+        - Ask for board size and validate the number:  The
+          number must be between 4 and 10, and even.
+        - Generate a screen with the players' names, and their
+          score at the top.  The board is generated as a N x N
+          table where N is the board size.
+        - Randomly generate game piece placement for the board.
+        - A game piece is a combination of a color and a number,
+          where the color is the background color in the set:
+          {maroon, red, orange, yellow, green, purple, lime, blue,
+           gray, white} and the number is between 1-4 inclusive.
+        - Each piece placed must have a corresponding matching
+          game piece which will also be randomly placed.  There
+          can be more than one pair of the same color/number
+          combinations.
+        - Once your random placement is complete, present the
+          board (with hidden pieces) to the players.
+        - At the bottom, you shall have a message element to
+          update whose turn it is.  You shall also have a 
+          button labeled "Concede Game" (see below).
+        - Set the appropriate event listeners for the elements
+          that are active at the appropriate times.
+
+        PLAY:
+        - Players take turns choosing a piece.  Your program
+          will reveal its color/number.  The player must then
+          choose its matching piece from the board.
+        - If the piece chosen matches, the player gets 1 point
+          (your program updates the score accordingly), then
+          the matching pieces are cleared from the board, and 
+          the player gets to continue.  If the piece chosen does 
+          not match, the player's turn is over, the piece values
+          are rehidden.
+
+        END:
+        - The game ends when all pieces have been matched, or
+          a player concedes a game.  If a player chooses
+          "Concede Game" then the other player wins.
+        - Once a game is over (all pieces discovered, or
+          a player concedes) use the alert() call to show
+          who one and congratulate them.  Choose an appropriate
+          message if there is a tie score.
+
+    3) Your P2.txt file shall:
+        - contain your name(s).
+        - contain any references you used outside of material
+          I presented.
+        - contain any collaboration that you had with others
+          students not in your group.
+        - the URL for your project (make sure this is correct!)
+        - a brief description of the project
+
+        - answer the following questions:
+            - Why in the writeup did I say it doesn't really
+              mean anything that this project needs to run on
+              the www.cs.uky.edu server?
+            - Give a reason why I told you to pick a random
+              name for your file.  Think, why THIS time when
+              I am usually very strict about what you name
+              files?
+            - What datastructure (simple or complex) did you
+              choose to use to store the game pieces and their
+              location?  Why did you choose that datastructure?
+            - Does your program accept mouse clicks on areas
+              that are not (or should not be) active?  If so,
+              what does your program do in those events?  If
+              not, what did you do to prevent those mouse
+              clicks from triggering code?  Be specific!
+
+
+What to turn in:
+    Submit a ZIP file to Canvas.  Do not create an additional
+    directory in your ZIP file, just a ZIP file of the 2 files
+    above: an HTML/JavaScript file and the P2.txt text file.  
+    Call this file P2_lname.zip where lname is your last name.  
+    If in a group use P2_lname1lname2.zip.
+
+Rubric:
+
+    HTML form is properly constructed:           15 points
+    JavaScript code (total):                     95 points
+        - does not produce console errors:   10
+        - gets player names/board size:       5
+        - generates board randomly:          20
+        - starts game properly, activating
+           appropriate elements only:        10
+        - reveals game pieces as clicked:    10
+        - removes matches properly:          10
+        - outputs correct/useful messages:   10
+        - updates score correctly:           10
+        - "Concede game" button correct:      5
+        - finishing game works:               5
+    Text file has all (and correct) information 
+          required:                              15 points
+    ------------------------------------------------------
+                                                125 points

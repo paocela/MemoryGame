@@ -1,0 +1,270 @@
+<!-- Project 2 - Paolo Celada-->
+<!DOCTYPE html>
+<html lang="en">
+    <title>Memory Game</title>
+    <head>
+        <script language="JavaScript">
+            // array of colors
+            colors = ["maroon", "red", "orange", "yellow", "green", "purple", "lime", "blue", "gray", "white"];
+            // max and min numbers allowed in cells
+            maxNum = 5;
+            minNum = 1
+            // definition of variable to keep track of each player's turn
+            activePlayer = 1;
+            // number of cards picked up (goes till 2)
+            numPicked = 0;
+            // global variable declarations declarations
+            var board;
+            var boardEmpty;
+            var size;
+            var pick1;
+            var pick2;
+            var scoreP1;
+            var scoreP2;
+            var totNumFoundCell;
+            var player1;
+            var player2;
+            // function to get and store users input
+            function getInput() {
+                player1 = prompt("Insert Player 1 name: ", "Player 1");
+                player2 = prompt("Insert Player 2 name: ", "Player 2");
+                size = prompt("Choose Table Size (between 4 and 10): ", "Size");
+                while (size < 4 || size > 10 || size.match(/[a-zA-Z@_!#$%^&*()<>?/\|}{~,:]/) || size % 2 != 0) { // size.match() check bad inputs using a regex
+                    size = prompt("ERROR - Table size must be between 4 and 10 ", "Size");
+                }
+                // build the board based on user input
+                buildGame(player1, player2, size)
+            }
+
+            // function to build the game (build all tables)
+            function buildGame(player1, player2, size) {
+                // build table 1
+                get("nameP1").innerHTML = player1;
+                get("nameP2").innerHTML = player2;
+                get("scoreP1").innerHTML = 0;
+                get("scoreP2").innerHTML = 0;
+                scoreP1 = 0;
+                scoreP2 = 0;
+                totNumFoundCell = 0;
+
+                // build table 2
+                board = document.createElement("table");
+                boardEmpty = document.createElement("table");           
+                board.border = 1;
+                boardEmpty.border = 1;
+                // get array of color+number (with pairs)
+                elements = createColNumArray(size);
+                for (var i = 0; i < size; i++) {
+                    // create board's row and boardEmpty's row
+                    var row = document.createElement("tr");
+                    var rowEmpty = document.createElement("tr");
+                    for (var j = 0; j < size; j++) {    
+                        // create board's cell and boardEmpty's cell
+                        var cell = document.createElement("td");
+                        var cellEmpty = document.createElement("td");
+                        // assign to each table's cell an id
+                        cell.id = i + "-" + j;
+                        cellEmpty.id = i + "-" + j;
+                        // get a random color+number (divided by space) from the array, delete the element from it and decrease size by one
+                        colorNum = elements.splice(getRandomNum(0, elements.length), 1)[0];
+                        // store in colorNum separately both color and number (as strings)
+                        colorNum = colorNum.split(" ");
+                        // append in the cell the number
+                        cell.appendChild(document.createTextNode(colorNum[1]));
+                        // set cell background color
+                        cell.style = "background-color:" + colorNum[0];
+                        // align text to the center
+                        cell.align = "center";
+                        // append in the cellEmpty a empty node
+                        cellEmpty.appendChild(document.createTextNode(""));
+                        // add event listener
+                        cellEmpty.addEventListener("click", play, false);
+                        // set cell and cellEmpty sizes
+                        cell.width = 70;
+                        cell.height = 23;
+                        cellEmpty.width = 70;
+                        cellEmpty.height = 30;
+                        // append both cells to relative rows
+                        rowEmpty.append(cellEmpty);
+                        row.appendChild(cell);
+                    }
+                    // append both rows to relative boards
+                    boardEmpty.appendChild(rowEmpty);
+                    board.appendChild(row);
+                }
+                // display board on the screen
+                get("board").appendChild(boardEmpty);                
+                // build table 3
+                get("concede").addEventListener("click", concede, false);
+                setMessage(player1 + " is your turn");
+                
+            }
+
+            // play the game
+            function play(event) {
+                var cellToCopy;
+                numPicked++;
+                // find cell clicked on board
+                idCellClicked = event.target.id;
+                for(var i = 0; i < size; i++) {
+                    for (var j = 0; j < size; j++) {
+                        if(board.rows[i].cells[j] !== undefined && board.rows[i].cells[j].id == idCellClicked) {
+                            // save cell clicked
+                            cellToCopy = board.rows[i].cells[j];
+                        }
+                    }
+                }
+                // find cell clicked on boardEmpty and substitute it with the saved cell from board
+                for(var i = 0; i < size; i++) {
+                    for (var j = 0; j < size; j++) {
+                        if(boardEmpty.rows[i].cells[j].id == idCellClicked) {
+                            boardEmpty.rows[i].cells[j].style.cssText = cellToCopy.style.cssText;
+                            boardEmpty.rows[i].cells[j].innerHTML = cellToCopy.innerHTML;
+                            boardEmpty.rows[i].cells[j].align = cellToCopy.align;
+                            boardEmpty.rows[i].cells[j].removeEventListener("click", play, false);
+                        }
+                    }
+                }
+                // save clicked cells into variables for later use
+                if (numPicked == 1) {
+                    pick1 = cellToCopy;
+                } else {
+                    pick2 = cellToCopy;
+                }
+                // use setTimeout function to make the program follow the sequential order of execution, wait for 0.01 sec
+                setTimeout(function(){
+                    // if the player picked 2 cards
+                    if (numPicked == 2) {
+                        // if cells are a pair, alert the user and update the score
+                        if(pick1.style.cssText == pick2.style.cssText && pick1.innerHTML == pick2.innerHTML) {
+                            alert((activePlayer == 1?player1:player2) + ", you found a match!");
+                            console.log(totNumFoundCell);
+                            totNumFoundCell += 2;
+                            console.log(totNumFoundCell);
+                            if (activePlayer == 1) {
+                                scoreP1++;
+                                get("scoreP1").innerHTML = scoreP1;
+                            } else {
+                                scoreP2++;
+                                get("scoreP2").innerHTML = scoreP2;
+                            }
+                        // if the cells are not a pair, alert the user and cover the 2 previously picked cells
+                        } else {
+                            // setTimeout(function(){alert("NOT A MATCH");}, 2000);
+                            alert("NOT A MATCH");
+                            for(var i = 0; i < size; i++) {
+                                for (var j = 0; j < size; j++) {
+                                    if(boardEmpty.rows[i].cells[j].id == pick1.id || boardEmpty.rows[i].cells[j].id == pick2.id) {
+                                        boardEmpty.rows[i].cells[j].innerHTML = null;
+                                        boardEmpty.rows[i].cells[j].style = null;
+                                        boardEmpty.rows[i].cells[j].width = 70;
+                                        boardEmpty.rows[i].cells[j].height = 30;
+                                        boardEmpty.rows[i].cells[j].addEventListener("click", play, false);
+                                    }
+                                }
+                            }
+                        }
+                        // set active player
+                        numPicked = 0;
+                        activePlayer = (activePlayer == 1? 2: 1);
+                        setMessage(activePlayer == 1?player1 + " is your turn":player2 + " is your turn");
+                    }
+                    // print final game messages and remove the click option on concede
+                    if(totNumFoundCell == size * size) {
+                        if(scoreP1 > scoreP2) {
+                            alert("CONGRATULATION - " + player1 + " won!! See you next time...")
+                            setMessage(player1 + " won!");
+                        } else if (scoreP1 < scoreP2) {
+                            alert("CONGRATULATION - " + player2 + " won!! See you next time...")
+                            setMessage(player2 + " won!");
+                        } else {
+                            alert("WOW - It was a tie!! See you next time...")
+                            setMessage("It was a tie!");
+                        }
+                        get("concede").removeEventListener("click", concede, false);
+                    }
+                }, 10);
+            }
+
+            // generate an array of random color+number
+            function createColNumArray(size) {
+                var elems = [];
+                for(var i = 0; i < (size * size) / 2; i++) {
+                    // generate random number and color and unite them in a string
+                    randomNum = getRandomNum(minNum, maxNum);
+                    randomColor = colors[getRandomNum(0, colors.length)];
+                    var celltxt = randomColor + " " + randomNum;
+                    // push 2 times since you want to have pairs for each element
+                    elems.push(celltxt);
+                    elems.push(celltxt);
+                }
+                return elems;
+            }
+
+            // set message
+            function setMessage(message) {
+                get("message").innerHTML = message;
+            }
+
+            // concede function
+            function concede() {
+                disableCells();
+                if(activePlayer == 1) {
+                    alert(player1 + " concede the game - " + player2 + " is the winner! See you next time...");
+                    setMessage(player2 + " won!");
+                } else {
+                    alert(player2 + " concede the game - " + player1 + " is the winner! See you next time...");
+                    setMessage(player1 + " won!");
+                }
+                get("concede").removeEventListener("click", concede, false);
+            }
+
+            // remove the click functionality to all cells, since the game is over
+            function disableCells() {
+                for(var i = 0; i < size; i++) {
+                    for (var j = 0; j < size; j++) {
+                        boardEmpty.rows[i].cells[j].removeEventListener("click", play, false);
+                    }
+                }
+            }
+
+            // get random number between min and max (inclusive)
+            function getRandomNum(min, max) {
+                return Math.floor(Math.random() * (max - min) + min)
+            }
+
+            // get element given the id
+            function get(id) {
+                return document.getElementById(id);
+            }
+        </script>
+    <!--HTML script, composed by 2 tables and a division-->
+    </head>
+    <h1>Hello - Play Memory</h1>
+    <body onload="getInput()">
+        <table border="1" style="width: 12cm">
+            <tr>
+                <th>Players</th>
+                <th id="nameP1"></th>
+                <th id="nameP2"></th>
+            </tr>
+            <tr>
+                <th>Score</th>
+                <th id="scoreP1"></th>
+                <th id="scoreP2"></th>
+            </tr>            
+        </table>
+        <br>
+        <div id="board"></div>
+        <br>
+        <table border="1"style="width: 12cm">
+                <tr>
+                    <th>Message</th>
+                </tr>
+                <tr>
+                    <th id="message"></th>
+                    <th id="concede">Concede Game</th>
+                </tr>            
+            </table>
+    </body>
+</html>
